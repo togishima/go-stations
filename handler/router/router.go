@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TechBowl-japan/go-stations/handler"
+	"github.com/TechBowl-japan/go-stations/service"
 )
 
 func NewRouter(todoDB *sql.DB) *http.ServeMux {
@@ -13,6 +14,11 @@ func NewRouter(todoDB *sql.DB) *http.ServeMux {
 
 	// /healthz エンドポイントの登録
 	mux.Handle("/healthz", handler.NewHealthzHandler())
+
+	// /todos エンドポイントの登録
+	todoService := service.NewTODOService(todoDB)
+	todoHandler := handler.NewTODOHandler(todoService)
+	mux.Handle("/todos", todoHandler)
 
 	return mux
 }
